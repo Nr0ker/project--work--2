@@ -11,9 +11,6 @@ async def Work_in_Kiev(message: types.Message):
     await StepStates.next()
 
 
-
-
-
 @dp.callback_query_handler(text="dnypro_callback")
 
 @dp.callback_query_handler(text="charkiv_callback")
