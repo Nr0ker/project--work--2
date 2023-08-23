@@ -10,7 +10,6 @@ async def Work_in_Kiev(message: types.Message):
     await bot.send_message(text="Тепер, виберіть район", chat_id=message.from_user.id, reply_markup=kb_rayon)
     await StepStates.next()
 
-
 @dp.callback_query_handler(text="dnypro_callback")
 
 @dp.callback_query_handler(text="charkiv_callback")
