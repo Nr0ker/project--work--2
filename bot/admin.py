@@ -1,5 +1,4 @@
 from aiogram import types
-from bot.keyboards import kb_yes_no
 from aiogram.dispatcher.filters.state import State, StatesGroup
 import asyncio
 from aiogram import Bot, Dispatcher

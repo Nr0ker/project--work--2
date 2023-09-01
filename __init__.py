@@ -38,31 +38,34 @@ add = ""
 
 @dp.message_handler(commands="start")
 async def start(message: types.Message):
-    await bot.send_message(text="Вітаю, моя айті компанія набирає працівників. \nЩоб подати заявку на роботу введіть /do_my_resume", chat_id=message.from_user.id)
+    await bot.send_message(text="Ми раді вітати вас у команді, яка рухається вперед та росте щодня. Ваша роль - це ключовий елемент нашого успіху, і ми впевнені, що разом ми досягнемо неймовірних результатів.\n"
+                                "\nВаша робота допомагає нам знайти талановитих фахівців, які принесуть свої знання та ентузіазм у нашу команду. Ваше завдання - це зробити наш відбір ще кращим, швидшим і більш ефективним.\n"
+                                "\nМи віримо в вашу здатність впізнавати істинний потенціал кандидатів та знайти тих, хто буде спільно розвивати нашу компанію. Нехай ваші зусилля завжди будуть винагорожені успішними прийомами на роботу та новими досягненнями.\n"
+                                "\nРазом ми зможемо досягти великих вершин, і ми дуже цьому раді. Ще раз ласкаво просимо в нашу команду! Вперед до нових викликів та досягнень!\n"
+                                "\nЩоб заповнити заявку використайте команду /do_my_survey"
+                                "", chat_id=message.from_user.id)
+
+    with open("it.jpg", 'rb') as photo:
+        await bot.send_photo(chat_id=message.chat.id, photo=photo)
 
 @dp.message_handler(commands="help")
 async def help(message: types.Message):
     await bot.send_message(text="Цей бот допоможе вам відправити заявку в IT-компанію."
 "\nКоманды: \n1) /start \n2)/help \n3) /do_my_resume \n4) /info", chat_id=message.from_user.id)
 
-
-@dp.message_handler(commands="info")
-async def info(message: types.Message):
-    await bot.send_message(text="Ой як впадлу мені це писать мені це писать мені мені це писать", chat_id=message.from_user.id)
-
-
-@dp.message_handler(commands="do_my_resume")
+@dp.message_handler(commands="do_my_survey")
 async def resume(message: types.Message):
     global saved_message, saved_message1, saved_message2
-    await bot.send_message(text="Ля-ля-ля", chat_id=message.from_user.id, reply_markup=kb_resume)
+    await bot.send_message(text="Заповніть анкету."
+                                "\nЩоб підтвердити використайте /сonfirm", chat_id=message.from_user.id, reply_markup=kb_resume)
 
-#перший клас машина станів
 class Form(StatesGroup):
     waiting_for_pib = State()
 
-@dp.callback_query_handler(lambda c: c.data == 'PIB')
+@dp.callback_query_handler(lambda c: c.data == 'LFM_name')
 async def process_callback_pib(message: types.Message, state: FSMContext):
-    await bot.send_message(message.from_user.id, text="Введите ваше Прізвище Ім'я По-батькові:")
+    await bot.send_message(message.from_user.id, text="Введіть ваші прізвище, ім'я, по батькові: "
+                                                      "Щоб подивитися, що ви ввели використайте /get_LFM_name")
     await Form.waiting_for_pib.set()
 
 @dp.message_handler(state=Form.waiting_for_pib)
@@ -71,23 +74,24 @@ async def process_pib(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         pib = message.text
 
-    await message.reply("Спасибо за информацию!")
+    await message.reply("Збережено!")
     await state.finish()
 
-@dp.message_handler(commands=['get_pib'])
+@dp.message_handler(commands=['get_LFM_name'])
 async def get_pib(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         if pib:
-            await message.reply(f"Ваше Прізвище Ім'я По-батькові: {pib}")
+            await message.reply(f"Ваші прізвище, ім'я, по батькові: {pib}")
         else:
-            await message.reply("Вы еще не ввели Прізвище Ім'я По-батькові.")
+            await message.reply("Ви не ввели дані.")
 
 class Form1(StatesGroup):
     waiting_for_birthdaydate = State()
 
 @dp.callback_query_handler(lambda c: c.data == 'birthdate')
 async def process_callback_birthdaydate(message: types.Message, state: FSMContext,):
-    await bot.send_message(message.from_user.id, text="Введіть вашу дату народження xx:xx:xxxx (число, місяць, рік):")
+    await bot.send_message(message.from_user.id, text="Введіть вашу дату народження xx:xx:xxxx (число, місяць, рік):"
+                                                      "Щоб подивитися, що ви ввели використайте /get_date_of_birth")
     await Form1.waiting_for_birthdaydate.set()
 
 
@@ -111,28 +115,29 @@ async def process_birthdaydate(message: types.Message, state: FSMContext):
         birthdate = message.text
 
     if check_date_format(birthdate):
-        print("Дата рождения соответствует формату и допустимым значениям.")
+        print("Дата народження прийнята")
         await message.reply("Данні збережено")
     else:
-        await message.reply("Дата рождения не соответствует формату или содержит недопустимые значения.")
+        await message.reply("Дата рождения не прийнята.")
 
     await state.finish()
 
 
-@dp.message_handler(commands=['get_birthdate'])
+@dp.message_handler(commands=['get_date_of_birth'])
 async def get_birthdate(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         if birthdate:
             await message.reply(f"Ваша дата народження: {birthdate}")
         else:
-            await message.reply("Вы еще не ввели дату народження.")
+            await message.reply("Ви не ввели дату народження.")
 
 class Form2(StatesGroup):
     waiting_for_adress = State()
 
-@dp.callback_query_handler(lambda c: c.data == 'adress')
+@dp.callback_query_handler(lambda c: c.data == 'address')
 async def process_callback_adress(message: types.Message, state: FSMContext):
-    await bot.send_message(message.from_user.id, text="Введіть вашу адресу:")
+    await bot.send_message(message.from_user.id, text="Введіть вашу адресу:"
+                                                      "Щоб подивитися, що ви ввели використайте /get_address")
     await Form2.waiting_for_adress.set()
 
 @dp.message_handler(state=Form2.waiting_for_adress)
@@ -141,16 +146,16 @@ async def process_adress(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         address = message.text
 
-    await message.reply("Інформацію збережено")
+    await message.reply("Адресу збережено")
     await state.finish()
 
-@dp.message_handler(commands=['get_adress'])
+@dp.message_handler(commands=['get_address'])
 async def get_adress(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         if address:
             await message.reply(f"Ваша адреса: {address}")
         else:
-            await message.reply("Вы еще не ввели адресу.")
+            await message.reply("Ви ще не ввели адресу.")
 
 class Form3(StatesGroup):
     waiting_for_phonenum = State()
@@ -164,7 +169,8 @@ def check_phone_format(phone):
 
 @dp.callback_query_handler(lambda c: c.data == 'phone_num')
 async def process_callback_pib(message: types.Message, state: FSMContext):
-    await bot.send_message(message.from_user.id, text="Введите ваш номер телефону:")
+    await bot.send_message(message.from_user.id, text="Введіть ваш номер телефону:"
+                                                      "Щоб подивитися, що ви ввели використайте /get_phone_num")
     await Form3.waiting_for_phonenum.set()
 
 @dp.message_handler(state=Form3.waiting_for_phonenum)
@@ -187,29 +193,16 @@ async def process_pib(message: types.Message, state: FSMContext):
 
         for number in phone_numbers:
             if check_phone_format(number):
-                print(f"Номер '{number}' соответствует допустимому формату.")
+                print(f"Номер '{number}' підходить.")
                 await message.reply("Номер збереженно")
             else:
-                print(f"Номер '{number}' не соответствует допустимому формату.")
+                print(f"Номер '{number}' не підходить.")
                 phone_num = ""
 
         if phone_num == "":
             await message.reply("Номер введено неправильно")
         else:
             pass
-
-        # for number in phone_numbers:
-        #     if check_phone_format(number):
-        #         print(f"Номер '{number}' соответствует допустимому формату.")
-        #         await message.reply("Інформацію збережено")
-        #         break
-        #     else:
-        #         print(f"Номер '{number}' не соответствует допустимому формату.")
-        #         phone_num = ""
-        # if phone_num == "":
-        #     await message.reply("Номер введено неправильно")
-        # else:
-        #     pass
 
         await state.finish()
 
@@ -219,14 +212,15 @@ async def get_pib(message: types.Message, state: FSMContext):
         if phone_num:
             await message.reply(f"Ваш номер телефону: {phone_num}")
         else:
-            await message.reply("Вы еще не ввели номера телефону.")
+            await message.reply("Вы не ввели номера телефону.")
 
 class Form4(StatesGroup):
     waiting_for_comm = State()
 
 @dp.callback_query_handler(lambda c: c.data == 'communication')
 async def process_callback_communication(message: types.Message, state: FSMContext):
-    await bot.send_message(message.from_user.id, text="Введіть інші способи комунікації:")
+    await bot.send_message(message.from_user.id, text="Введіть інші способи комунікації:"
+                                                      "Щоб подивитися, що ви ввели використайте /get_types_of_communication")
     await Form4.waiting_for_comm.set()
 
 @dp.message_handler(state=Form4.waiting_for_comm)
@@ -248,42 +242,10 @@ async def get_pib(message: types.Message, state: FSMContext):
 
 class Form5(StatesGroup):
     waiting_for_email = State()
-
-def check_email_format(email):
-    # Паттерн для проверки формата email адреса
-    pattern = r"^[a-zA-Z0-9._%+-]+@(?:(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}|(?:\d{1,3}\.){3}\d{1,3})$"
-    if re.match(pattern, email):
-        return True
-    return False
-
-def check_allowed_domain(email, allowed_domains):
-    domain = email.split('@')[-1]
-    return domain in allowed_domains
-
-# Список разрешенных доменов
-allowed_domains = [
-    "gmail.com",
-    "yahoo.com",
-    "microsoft.com",
-    "i.ua",
-    "ukrnet.com",
-    "meta.ua",
-]
-
-# Примеры email адресов
-email_addresses = [
-    "user@gmail.com",
-    "user123@yahoo.com",
-    "user.mail@microsoft.com",
-    "user@i.ua",
-    "user@ukrnet.com",
-    "user@meta.ua"
-]
-
-
 @dp.callback_query_handler(lambda c: c.data == 'email')
 async def process_callback_communication(message: types.Message, state: FSMContext):
-    await bot.send_message(message.from_user.id, text="Введіть інші способи комунікації:")
+    await bot.send_message(message.from_user.id, text="Введіть інші способи комунікації:"
+                                                      "Щоб подивитися, що ви ввели використайте /get_email")
     await Form5.waiting_for_email.set()
 
 @dp.message_handler(state=Form5.waiting_for_email)
@@ -292,20 +254,8 @@ async def process_communication(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         email = message.text
 
-    for email in email_addresses:
-        if email.endswith("@") and check_email_format(email[:-1]) and check_allowed_domain(email[:-1], allowed_domains):
-            print(f"Email '{email}' соответствует допустимому формату и имеет разрешенный домен.")
-            await message.reply("Інформацію збережено")
-            break
-        else:
-            print(f"Email '{email}' не соответствует допустимому формату или не имеет разрешенный домен.")
-            email = ""
+        await message.reply("Інформацію збережено")
 
-        if email == "":
-            await message.reply("емейл введено неправилно")
-            break
-        else:
-            pass
     await state.finish()
 
 @dp.message_handler(commands=['get_email'])
@@ -320,7 +270,7 @@ async def get_pib(message: types.Message, state: FSMContext):
 class Form6(StatesGroup):
     waiting_for_osvita = State()
 
-@dp.callback_query_handler(lambda c: c.data == 'osvita')
+@dp.callback_query_handler(lambda c: c.data == 'education')
 async def process_callback_pib(message: types.Message, state: FSMContext):
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
@@ -333,11 +283,10 @@ async def process_callback_pib(message: types.Message, state: FSMContext):
             [InlineKeyboardButton(text="Повна вища освіта", callback_data="education_full_higher")],
         ]
     )
-    await bot.send_message(message.from_user.id, text="Яка у вас освіта:", reply_markup=keyboard)
+    await bot.send_message(message.from_user.id, text="Яка у вас освіта:"
+                                                      "Щоб подивитися, що ви ввели використайте /get_education", reply_markup=keyboard)
     await Form6.waiting_for_osvita.set()
 
-# Добавьте обработку callback'ов для каждого варианта образования
-# Например:
 @dp.callback_query_handler(lambda c: c.data == 'education_primary', state=Form6.waiting_for_osvita)
 async def process_education_primary(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.send_message(callback_query.from_user.id, text="Ви вибрали 'Початкова загальна освіта'")
@@ -394,7 +343,7 @@ async def process_education_primary(callback_query: types.CallbackQuery, state: 
         osvita = "Повна вища освіта"
     await state.finish()
 
-@dp.message_handler(commands=['get_osvita'])
+@dp.message_handler(commands=['get_education'])
 async def get_osvita(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         global osvita
@@ -406,9 +355,10 @@ async def get_osvita(message: types.Message, state: FSMContext):
 class Form7(StatesGroup):
     waiting_for_add = State()
 
-@dp.callback_query_handler(lambda c: c.data == 'add')
+@dp.callback_query_handler(lambda c: c.data == 'additional_information')
 async def process_callback_add(message: types.Message, state: FSMContext):
-    await bot.send_message(message.from_user.id, text="Бажаете щось додати?:")
+    await bot.send_message(message.from_user.id, text="Бажаете щось додати?:"
+                                                      "Щоб подивитися, що ви додали /get_additional_information")
     await Form7.waiting_for_add.set()
 
 @dp.message_handler(state=Form7.waiting_for_add)
@@ -420,7 +370,7 @@ async def process_pib(message: types.Message, state: FSMContext):
     await message.reply("Інформацію збережено!")
     await state.finish()
 
-@dp.message_handler(commands=['get_adding'])
+@dp.message_handler(commands=['get_additional_information'])
 async def get_pib(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         if add:
@@ -520,7 +470,7 @@ async def confirm_resume(message: types.Message):
 from aiogram import Dispatcher, types
 
 
-@dp.message_handler(commands=['send_anketa'])
+@dp.message_handler(commands=['send_survey'])
 async def send_photo_to_admin(message: types.Message):
     admin_user_id = ADMINS  # Замените на ID администратора
     photo_path = 'anketa.png'  # Путь к вашей фотографии
