@@ -1,8 +1,15 @@
-from bot.data.config import dp, bot, ADMINS
 from aiogram import types
 from keyboards import kb_yes_no
 from aiogram.dispatcher.filters.state import State, StatesGroup
 import asyncio
+from aiogram import Bot, Dispatcher
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+
+TOKEN = "6134050209:AAF4BFPnmo3rRj1H8htJmXkIVM2ob61QB-s"
+ADMINS = "1172984681"
+
+bot = Bot(TOKEN)
+dp = Dispatcher(bot=bot, storage=MemoryStorage())
 
 
 @dp.message_handler(commands=['send_anketa'])
