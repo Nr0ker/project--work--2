@@ -4,7 +4,7 @@ import re
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 import mysql.connector
 from aiogram.utils import executor
-from bot.data.config import dp, bot
+from bot.data.config import dp, bot, ADMINS
 from bot.set_default_commands import set_default_commands
 from aiogram import types
 from bot.keyboards import kb_resume
@@ -519,14 +519,6 @@ async def confirm_resume(message: types.Message):
 from aiogram import Dispatcher, types
 
 
-@dp.message_handler(commands=['send_anketa'])
-async def send_photo_to_admin(message: types.Message):
-    admin_user_id = '1172984681'  # Замените на ID администратора
-    photo_path = 'anketa.png'  # Путь к вашей фотографии
-
-    # Отправка фотографии администратору
-    with open(photo_path, 'rb') as photo:
-        await bot.send_photo(chat_id=admin_user_id, photo=photo, caption="Ваша фотография")
 
 
 
