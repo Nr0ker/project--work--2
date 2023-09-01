@@ -520,6 +520,20 @@ async def confirm_resume(message: types.Message):
 from aiogram import Dispatcher, types
 
 
+@dp.message_handler(commands=['send_anketa'])
+async def send_photo_to_admin(message: types.Message):
+    admin_user_id = ADMINS  # Замените на ID администратора
+    photo_path = 'anketa.png'  # Путь к вашей фотографии
+
+    # Отправка фотографии администратору
+    with open(photo_path, 'rb') as photo:
+        await bot.send_photo(chat_id=admin_user_id, photo=photo, caption="Ваша фотография", reply_markup=kb_yes_no)
+
+
+@dp.callback_query_handler(text="apply_callabck")
+async def Apply(message: types.Message):
+    await bot.send_message(chat_id=ADMINS, text="Назначте дату на співбесіду")
+    await bot.send_message(chat_id=message.from_user.id, text="Ви прийняті!!")
 
 
 
