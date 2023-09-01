@@ -7,7 +7,7 @@ from aiogram.utils import executor
 from bot.data.config import dp, bot, ADMINS
 from bot.set_default_commands import set_default_commands
 from aiogram import types
-from bot.keyboards import kb_resume
+from bot.keyboards import kb_resume, kb_yes_no
 from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
 from bot import admin
