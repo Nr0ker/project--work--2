@@ -10,6 +10,7 @@ from aiogram import types
 from bot.keyboards import kb_resume
 from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
+from bot import admin
 
 pib = ""
 birthdate = ""

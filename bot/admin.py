@@ -1,11 +1,8 @@
-from data.config import dp, bot, ADMINS
+from bot.data.config import dp, bot, ADMINS
 from aiogram import types
 from keyboards import kb_yes_no
 from aiogram.dispatcher.filters.state import State, StatesGroup
 import asyncio
-
-class ApplyStatesGroup(StatesGroup):
-    apply = State()
 
 
 @dp.message_handler(commands=['send_anketa'])
@@ -18,14 +15,12 @@ async def send_photo_to_admin(message: types.Message):
         await bot.send_photo(chat_id=admin_user_id, photo=photo, caption="Ваша фотография", reply_markup=kb_yes_no)
 
 @dp.callback_query_handler(text="apply_callabck")
-async def Apply(meessage: types.Message):
+async def Apply(message: types.Message):
     await bot.send_message(chat_id=ADMINS, text="Назначте дату на співбесіду")
-    await ApplyStatesGroup.apply.set()
+    await bot.send_message(chat_id=message.from_user.id, text="Ви прийняті!!")
 
-@dp.message_handler(state=ApplyStatesGroup.apply)
-async def Date(message: types.Message):
-    message = message.forward_from_message_id
-    await bot.send_message(chat_id=message.from_user.id)
+
+
 
 # async def forward_message(message: types.Message):
 #     # Здесь вы можете указать chat_id чата, из которого хотите получить сообщение
