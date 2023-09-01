@@ -21,6 +21,7 @@ async def send_photo_to_admin(message: types.Message):
     with open(photo_path, 'rb') as photo:
         await bot.send_photo(chat_id=admin_user_id, photo=photo, caption="Ваша фотография", reply_markup=kb_yes_no)
 
+
 @dp.callback_query_handler(text="apply_callabck")
 async def Apply(message: types.Message):
     await bot.send_message(chat_id=ADMINS, text="Назначте дату на співбесіду")
