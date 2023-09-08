@@ -19,6 +19,7 @@ cursor.execute("""
             user_id VARCHAR(255)
         )
 """)
+
 db.commit()
 cursor.close()
 db.close()
