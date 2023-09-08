@@ -6,16 +6,21 @@ async def set_default_commands(dp):
         [
             types.BotCommand("start", "Запустити бота"),
             types.BotCommand("help", "Отримати допомогу"),
-            types.BotCommand("send_anketa", "Надіслати анкету"),
+            types.BotCommand("info", "Інформація про бота"),
+            types.BotCommand("send_survey", "Надіслати анкету"),
             types.BotCommand("confirm", "Зробити анкету"),
-            types.BotCommand("do_my_resume", "Почати робити резюме"),
-            types.BotCommand("info", "Інформація про бота"),
-            types.BotCommand("", "Дізнатися ФІО"),
-            types.BotCommand("info", "Інформація про бота"),
-            types.BotCommand("info", "Інформація про бота"),
-            types.BotCommand("info", "Інформація про бота"),
-            types.BotCommand("info", "Інформація про бота"),
-            types.BotCommand("info", "Інформація про бота"),
+            types.BotCommand("get_date_of_birth", "Отримати дату народження"),
+            types.BotCommand("get_phone_num", "Ваш номер телефону"),
+            types.BotCommand("get_email", "Ваш E-mail"),
+            types.BotCommand("get_education", "Ваше освіта"),
+            types.BotCommand("get_exp", "Ваш досвід роботи")
 
         ]
     )
+
+
+
+
+
+
+
