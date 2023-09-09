@@ -31,7 +31,7 @@ kb_work = types.InlineKeyboardMarkup(
 
 kb_yes_no = types.InlineKeyboardMarkup(
     inline_keyboard=[
-        [types.InlineKeyboardButton(text="Прийняти", callback_data='apply_callabck')],
+        [types.InlineKeyboardButton(text="Прийняти", callback_data='apply_callback')],
         [types.InlineKeyboardButton(text="Відхилити", callback_data='reject_callback')]
 
     ]

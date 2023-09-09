@@ -148,12 +148,13 @@ async def get_pib(message: types.Message, state: FSMContext):
 class Form5(StatesGroup):
     waiting_for_email = State()
 
+
 def check_email(email1):
     email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}\b'
     email_list = re.findall(email_pattern, email1)
 
     for i in email_list:
-        if not i.endswith('@gmail.ru'):
+        if not i.endswith('.ru'):
             return True
 
     return False
@@ -186,6 +187,7 @@ async def get_pib(message: types.Message, state: FSMContext):
             await message.reply(f"Ваш E-mail: {email}")
         else:
             await message.reply("Ви еще не ввели ваш E-mail")
+
 
 class ExpStatesGruop(StatesGroup):
     experience = State()
@@ -477,6 +479,7 @@ async def confirm_resume(message: types.Message):
             await bot.send_photo(message.chat.id, types.InputFile(photo))
 
         work = ""
+        user_id = ""
         pib = ""
         exp = ""
         birthdate = ""
